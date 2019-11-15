@@ -17,6 +17,12 @@ iface eno1 inet static
         gateway 10.1.0.20
         # dns-* options are implemented by the resolvconf package, if installed
         dns-nameservers 8.8.8.8
+# Bind the External VIP
+auto ens1f0:0
+iface ens1f0:0 inet static
+    address 10.1.0.10
+    netmask 255.255.0.0
+
 # The public interface
 auto eno2
 iface eno2 inet manual
@@ -33,6 +39,12 @@ iface eno1.120 inet manual
 auto eno1.130
 iface eno1.130 inet manual
     vlan-raw-device eno1
+# Bind the Internal VIP
+auto br-mgmt:0
+iface br-mgmt:0 inet static
+    address 10.1.110.10
+    netmask 255.255.255.0
+
 # Container/Host management bridge
 auto br-mgmt
 iface br-mgmt inet static
