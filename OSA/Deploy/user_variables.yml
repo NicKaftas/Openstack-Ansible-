@@ -1,0 +1,9 @@
+debug: false
+verbose: true
+
+install_method: source
+
+haproxy_keepalived_external_vip_cidr: "10.1.0.10/16"
+haproxy_keepalived_internal_vip_cidr: "10.1.110.10/24"
+haproxy_keepalived_external_interface: ens1f0
+haproxy_keepalived_internal_interface: br-mgmt

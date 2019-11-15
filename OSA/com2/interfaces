@@ -1,0 +1,78 @@
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5).
+
+source /etc/network/interfaces.d/*
+
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eno1
+iface eno1 inet static
+        address 10.1.0.24
+        netmask 255.255.0.0
+        network 10.1.0.0
+        broadcast 10.1.255.255
+        gateway 10.1.0.20
+        # dns-* options are implemented by the resolvconf package, if installed
+        dns-nameservers 8.8.8.8
+# The public interface
+auto eno2
+iface eno2 inet manual
+
+# Container/Host management VLAN interface
+auto eno1.110
+iface eno1.110 inet manual
+    vlan-raw-device eno1
+# OpenStack Networking VXLAN (tunnel/overlay) VLAN interface
+auto eno1.120
+iface eno1.120 inet manual
+    vlan-raw-device eno1
+# Storage network VLAN interface (optional)
+auto eno1.130
+iface eno1.130 inet manual
+    vlan-raw-device eno1
+# Container/Host management bridge
+auto br-mgmt
+iface br-mgmt inet static
+    bridge_stp off
+    bridge_waitport 0
+    bridge_fd 0
+    bridge_ports eno1.110
+    address 10.1.110.5
+    netmask 255.255.255.0
+    dns-nameservers 8.8.8.8 8.8.4.4
+# compute1 VXLAN (tunnel/overlay) bridge config
+auto br-vxlan
+iface br-vxlan inet static
+    bridge_stp off
+    bridge_waitport 0
+    bridge_fd 0
+    bridge_ports eno1.120
+    address 10.1.120.3
+    netmask 255.255.255.0
+# compute1 Network VLAN bridge
+auto br-vlan
+iface br-vlan inet manual
+    bridge_stp off
+    bridge_waitport 0
+    bridge_fd 0
+# Create veth pair, do not abort if already exists
+    pre-up ip link add br-vlan-veth type veth peer name eno12 || true
+# Set both ends UP
+    pre-up ip link set br-vlan-veth up
+    pre-up ip link set eno12 up
+# Delete veth pair on DOWN
+    post-down ip link del br-vlan-veth || true
+    bridge_ports eno2 br-vlan-veth
+# compute1 Storage bridge
+auto br-storage
+iface br-storage inet static
+    bridge_stp off
+    bridge_waitport 0
+    bridge_fd 0
+    bridge_ports eno1.130
+    address 10.1.130.3
+    netmask 255.255.255.0
+
