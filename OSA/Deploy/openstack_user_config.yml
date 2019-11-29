@@ -37,7 +37,7 @@ global_overrides:
         container_bridge: "br-vlan"
         container_type: "veth"
         container_interface: "eth12"
-        host_bind_override: "ens1f1"
+        host_bind_override: "ens1f1" # The Interface of the Controllers Interface. To fix the bug edit the /etc/neutron/plugins/ml2/linuxbridge_agent.ini in the compute(s) Nodes.
         type: "flat"
         net_name: "flat"
         group_binds:
