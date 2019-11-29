@@ -1,3 +1,5 @@
+# Openstack-Ansible Installation Openstack Release : Pike TestBed in 2 nodes 1 Controller and 1 Compute
+# Dont Forget to Create Empty Partitions and create LVM in order to use Cinder Service
 cidr_networks:
   container: 10.1.110.0/24
   tunnel: 10.1.120.0/24
